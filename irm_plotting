@@ -1,0 +1,46 @@
+def irm_plotting(irm_data, d_irm_data):
+
+    x1 = irm_data[:, 0]
+    y1_orig = irm_data[:, 1]
+    y1 = y1_orig/max(y1_orig)  # IRM归一化
+    x2 = d_irm_data[:, 0]
+    y2_orig = d_irm_data[:, 1]
+    y2 = y2_orig/max(y2_orig)
+
+    '''# IRM获得曲线的一阶导数
+    z1 = np.polyfit(x1, y1, 15)
+    p1 = np.poly1d(z1)
+    # print(p1)
+    pd = p1.deriv()
+    yvals = pd(x1)/max(pd(x1))
+    xp=x1[:-4]
+    yp = yvals[:-4]
+    '''
+    ax1 = plt.gca()  # get current axis
+
+    ax1.plot([0, 0], [0, 1.1], '-', color=cl[2], linewidth=0.5) # 画纵轴
+    ax1.plot([1.1*min(x2), max(x1)], [0, 0], '-', color=cl[2], linewidth=0.5) # 画横轴
+
+    ax1.plot(x1, y1, '.', color=cl[4], label=u"IRM", markersize=0.3, linestyle='-', linewidth=0.3)
+    ax1.plot(x2, y2, '.', color=cl[3], label=u"Back-field demag. of IRM", markersize=0.3, linestyle='-', linewidth=0.3)
+    # ax1.plot(x1[:-4], yp, '-', color='C0', label=u"Gradient of IRM", linewidth=0.6)
+
+    #  标示Bcr
+    Bcr = find_value(y2,x2)
+    ax1.plot(Bcr, 0, 'o', markersize=1, color=cl[0])
+    ax1.text(0.9*Bcr, -0.1, 'Bcr = '+str(round(-Bcr*1000, 1))+' mT', font2)
+
+    # 设置坐标标记字体和大小
+    ax1.tick_params(direction='in',labelsize=6, pad=2, length=2, width=0.5)
+    labels = ax1.get_xticklabels() + ax1.get_yticklabels()
+    [label.set_fontname('Arial') for label in labels]
+
+    ax1.set_xlabel(r'Field (T)', font1, labelpad=0)
+    ax1.set_ylabel(r'Normalized IRM', font1,labelpad=-1)
+
+    ax1.spines['bottom'].set(linewidth=0.5)
+    ax1.spines['top'].set(linewidth=0.5)
+    ax1.spines['left'].set(linewidth=0.5)
+    ax1.spines['right'].set(linewidth=0.5)
+
+    return()
